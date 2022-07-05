@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { renderToString } from 'react-dom/server';
 
-function App() {
+const data = [
+  [0, 1, 0],
+  [1, 1, 1],
+  [0, 1, 0],
+];
+
+function X() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <table>
+        {data.map((row, ri) => (
+          <tr key={`row${ri}`}>
+            {row.map((cell, ci) => (
+              <td key={`row${ri}-cell${ci}`}>
+                {cell === 0 || (ri === 1 && ci === 1) ? 1 : 0}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </table>
     </div>
   );
 }
 
-export default App;
+const content = renderToString(<X />);
+const expected = '<div data-reactroot=""><table><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td></tr></table></div>';
+
+console.log(content === expected);
+
+export default X;
